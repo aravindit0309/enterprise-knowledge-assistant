@@ -23,4 +23,10 @@ public class KnowledgeController : ControllerBase
         if (item is null) return NotFound();
         return Ok(item);
     }
+
+    [HttpGet("bedrock")]
+    public IActionResult CallBedrock()
+    {
+        return Ok("Hello from Bedrock!");
+    }
 }
