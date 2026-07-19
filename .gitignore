@@ -5,3 +5,8 @@
 /src/EnterpriseKnowledgeAssistant.Api/obj
 /src/EnterpriseKnowledgeAssistant.Service/obj
 /.vs
+/EnterpriseKnowledgeAssistant.Application/obj/Debug/net10.0
+/EnterpriseKnowledgeAssistant.Application/obj
+/EnterpriseKnowledgeAssistant.Infrastructure/obj/Debug/net10.0
+/EnterpriseKnowledgeAssistant.Infrastructure/obj
+/EnterpriseKnowledgeAssistant.Domain/obj

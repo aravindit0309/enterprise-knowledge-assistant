@@ -1,4 +1,4 @@
-﻿namespace EnterpriseKnowledgeAssistant.Application.Features.Chat
+﻿namespace EnterpriseKnowledgeAssistant.Application.Features.Chat.Models
 {
     public class ChatResponse
     {

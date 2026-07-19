@@ -5,6 +5,8 @@
 	<ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <ItemGroup>
+	<ProjectReference Include="..\..\EnterpriseKnowledgeAssistant.Application\EnterpriseKnowledgeAssistant.Application.csproj" />
+	<ProjectReference Include="..\..\EnterpriseKnowledgeAssistant.Infrastructure\EnterpriseKnowledgeAssistant.Infrastructure.csproj" />
 	<ProjectReference Include="..\EnterpriseKnowledgeAssistant.Service\EnterpriseKnowledgeAssistant.Service.csproj" />
   </ItemGroup>
 </Project>
