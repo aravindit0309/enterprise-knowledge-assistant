@@ -11,6 +11,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Terraform", "Terraform", "{2FA31CEE-110A-4A92-AE7A-08AD8F23DCCA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{99A32385-31C3-42F6-AE54-3EDBF9BE3C80}"
+	ProjectSection(SolutionItems) = preProject
+		architecture.md = architecture.md
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Service", "Service", "{FA0EAD2C-5987-4B22-A7E8-04AF28368A41}"
 EndProject

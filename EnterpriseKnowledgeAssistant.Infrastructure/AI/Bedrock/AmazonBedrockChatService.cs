@@ -22,6 +22,8 @@ namespace EnterpriseKnowledgeAssistant.Infrastructure.AI.Bedrock
 
         public Task<ChatResponse> GetChatResponseAsync(ChatRequest request)
         {
+            _logger.LogInformation( "Using Bedrock model {ModelId} in region {Region}", _options.ModelId, _options.Region);
+            
             return Task.FromResult(new ChatResponse
             {
                 Response = "This response will come from Amazon Bedrock.",
