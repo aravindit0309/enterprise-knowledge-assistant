@@ -8,26 +8,29 @@ namespace EnterpriseKnowledgeAssistant.Infrastructure.AI.Bedrock
 {
     public class AmazonBedrockChatService : IChatService
     {
-        private readonly BedrockOptions _options;
         private readonly IAmazonBedrockRuntime _bedrockRuntime;
+        private readonly IBedrockRequestBuilder _requestBuilder;
         private readonly ILogger<AmazonBedrockChatService> _logger;
 
-        public AmazonBedrockChatService(
-            IOptions<BedrockOptions> options, IAmazonBedrockRuntime bedrockRuntime, ILogger<AmazonBedrockChatService> logger)
+        public AmazonBedrockChatService( IAmazonBedrockRuntime bedrockRuntime, 
+            ILogger<AmazonBedrockChatService> logger, IBedrockRequestBuilder requestBuilder)
         {
-            _options = options.Value;
+           
             _bedrockRuntime = bedrockRuntime;
             _logger = logger;
+            _requestBuilder = requestBuilder;
         }
 
         public Task<ChatResponse> GetChatResponseAsync(ChatRequest request)
         {
-            _logger.LogInformation( "Using Bedrock model {ModelId} in region {Region}", _options.ModelId, _options.Region);
-            
+            var invokeRequest = _requestBuilder.Build(request);
+
+            _logger.LogInformation( "Prepared request for Bedrock model {ModelId}", invokeRequest.ModelId);
+
             return Task.FromResult(new ChatResponse
             {
                 Response = "This response will come from Amazon Bedrock.",
-                ModelUsed = "Placeholder"
+                ModelUsed = invokeRequest.ModelId
             });
         }
     }

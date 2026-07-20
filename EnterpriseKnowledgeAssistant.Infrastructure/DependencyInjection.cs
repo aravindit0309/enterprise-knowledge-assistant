@@ -24,6 +24,7 @@ namespace EnterpriseKnowledgeAssistant.Infrastructure
 
             services.AddAWSService<IAmazonBedrockRuntime>();
             services.AddScoped<IChatService, AmazonBedrockChatService>();
+            services.AddScoped<IBedrockRequestBuilder, NovaRequestBuilder>();
 
             return services;
         }
