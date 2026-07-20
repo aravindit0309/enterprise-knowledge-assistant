@@ -1,8 +1,9 @@
 ﻿using Amazon.BedrockRuntime;
 using EnterpriseKnowledgeAssistant.Application.Features.Chat;
 using EnterpriseKnowledgeAssistant.Application.Features.Chat.Models;
+using EnterpriseKnowledgeAssistant.Infrastructure.AI.Bedrock.Models;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+using System.Text.Json;
 
 namespace EnterpriseKnowledgeAssistant.Infrastructure.AI.Bedrock
 {
@@ -21,17 +22,42 @@ namespace EnterpriseKnowledgeAssistant.Infrastructure.AI.Bedrock
             _requestBuilder = requestBuilder;
         }
 
-        public Task<ChatResponse> GetChatResponseAsync(ChatRequest request)
+        public async Task<ChatResponse> GetChatResponseAsync(ChatRequest request)
         {
-            var invokeRequest = _requestBuilder.Build(request);
-
-            _logger.LogInformation( "Prepared request for Bedrock model {ModelId}", invokeRequest.ModelId);
-
-            return Task.FromResult(new ChatResponse
+            try
             {
-                Response = "This response will come from Amazon Bedrock.",
-                ModelUsed = invokeRequest.ModelId
-            });
+                var invokeRequest = _requestBuilder.Build(request);
+
+                _logger.LogInformation( "Invoking Bedrock model {ModelId}", invokeRequest.ModelId);
+
+                var response = await _bedrockRuntime.InvokeModelAsync(invokeRequest);
+
+                using var reader = new StreamReader(response.Body);
+
+                var json = await reader.ReadToEndAsync();
+
+                var novaResponse = JsonSerializer.Deserialize<NovaResponse>(
+                    json,
+                    new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    });
+
+                var answer = novaResponse?.Output?.Message?.Content?.FirstOrDefault()?.Text ?? "No response generated.";
+
+                return new ChatResponse
+                {
+                    Response = answer,
+                    ModelUsed = invokeRequest.ModelId
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex,
+                    "Error invoking Amazon Bedrock.");
+
+                throw new InvalidOperationException("Unable to generate AI response.", ex);
+            }
         }
     }
 }

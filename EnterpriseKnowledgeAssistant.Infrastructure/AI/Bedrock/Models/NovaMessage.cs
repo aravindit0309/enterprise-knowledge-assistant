@@ -1,8 +1,9 @@
-﻿using System;
+﻿using EnterpriseKnowledgeAssistant.Infrastructure.AI.Models;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace EnterpriseKnowledgeAssistant.Infrastructure.AI.Models
+namespace EnterpriseKnowledgeAssistant.Infrastructure.AI.Bedrock.Models
 {
     public class NovaMessage
     {

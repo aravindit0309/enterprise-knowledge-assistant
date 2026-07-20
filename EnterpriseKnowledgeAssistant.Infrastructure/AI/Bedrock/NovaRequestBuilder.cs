@@ -1,5 +1,6 @@
 ﻿using Amazon.BedrockRuntime.Model;
 using EnterpriseKnowledgeAssistant.Application.Features.Chat.Models;
+using EnterpriseKnowledgeAssistant.Infrastructure.AI.Bedrock.Models;
 using EnterpriseKnowledgeAssistant.Infrastructure.AI.Models;
 using Microsoft.Extensions.Options;
 using System;

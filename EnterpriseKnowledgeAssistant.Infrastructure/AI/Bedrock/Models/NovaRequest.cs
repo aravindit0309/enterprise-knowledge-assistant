@@ -1,4 +1,6 @@
-﻿namespace EnterpriseKnowledgeAssistant.Infrastructure.AI.Models
+﻿using EnterpriseKnowledgeAssistant.Infrastructure.AI.Models;
+
+namespace EnterpriseKnowledgeAssistant.Infrastructure.AI.Bedrock.Models
 {
     public class NovaRequest
     {
