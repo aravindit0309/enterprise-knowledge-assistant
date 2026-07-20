@@ -1,5 +1,6 @@
 ﻿using Amazon;
 using Amazon.BedrockRuntime;
+using Amazon.Extensions.NETCore.Setup;
 using EnterpriseKnowledgeAssistant.Application.Features.Chat;
 using EnterpriseKnowledgeAssistant.Infrastructure.AI.Bedrock;
 using Microsoft.Extensions.Configuration;
@@ -10,19 +11,18 @@ namespace EnterpriseKnowledgeAssistant.Infrastructure
     public static class DependencyInjection
     {
         public static IServiceCollection AddInfrastructure(
-       this IServiceCollection services,
-       IConfiguration configuration)
+       this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<BedrockOptions>(
-                configuration.GetSection(BedrockOptions.SectionName));
+            configuration.GetSection(BedrockOptions.SectionName));
 
-            var options = configuration
-                .GetSection(BedrockOptions.SectionName).Get<BedrockOptions>()!;
+            services.AddDefaultAWSOptions(new AWSOptions
+            {
+                Region = RegionEndpoint.GetBySystemName(
+             configuration["Bedrock:Region"])
+            });
 
-            services.AddSingleton<IAmazonBedrockRuntime>(_ =>
-                new AmazonBedrockRuntimeClient(
-                    RegionEndpoint.GetBySystemName(options.Region)));
-
+            services.AddAWSService<IAmazonBedrockRuntime>();
             services.AddScoped<IChatService, AmazonBedrockChatService>();
 
             return services;
