@@ -13,8 +13,8 @@ namespace EnterpriseKnowledgeAssistant.Infrastructure
         public static IServiceCollection AddInfrastructure(
        this IServiceCollection services, IConfiguration configuration)
         {
-            services.Configure<BedrockOptions>(
-            configuration.GetSection(BedrockOptions.SectionName));
+            services
+            .AddOptions<BedrockOptions>().Bind(configuration.GetSection("Bedrock")).ValidateDataAnnotations().ValidateOnStart();
 
             services.AddDefaultAWSOptions(new AWSOptions
             {
