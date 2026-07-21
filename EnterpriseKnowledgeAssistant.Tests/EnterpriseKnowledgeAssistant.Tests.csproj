@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="xunit" Version="2.4.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.8.1" />
+    <PackageReference Include="Moq" Version="4.20.4" />
+    <PackageReference Include="coverlet.collector" Version="4.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EnterpriseKnowledgeAssistant.Application\EnterpriseKnowledgeAssistant.Application.csproj" />
+    <ProjectReference Include="..\EnterpriseKnowledgeAssistant.Infrastructure\EnterpriseKnowledgeAssistant.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>
