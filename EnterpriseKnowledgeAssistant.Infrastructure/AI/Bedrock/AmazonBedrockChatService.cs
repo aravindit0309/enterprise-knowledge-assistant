@@ -22,7 +22,7 @@ namespace EnterpriseKnowledgeAssistant.Infrastructure.AI.Bedrock
             _requestBuilder = requestBuilder;
         }
 
-        public async Task<ChatResponse> GetChatResponseAsync(ChatRequest request)
+        public async Task<ChatResponse> GetChatResponseAsync(ChatRequest request, CancellationToken cancellationToken = default)
         {
             try
             {
@@ -30,7 +30,7 @@ namespace EnterpriseKnowledgeAssistant.Infrastructure.AI.Bedrock
 
                 _logger.LogInformation( "Invoking Bedrock model {ModelId}", invokeRequest.ModelId);
 
-                var response = await _bedrockRuntime.InvokeModelAsync(invokeRequest);
+                var response = await _bedrockRuntime.InvokeModelAsync(invokeRequest, cancellationToken);
 
                 using var reader = new StreamReader(response.Body);
 
