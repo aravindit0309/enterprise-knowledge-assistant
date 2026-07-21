@@ -1,8 +1,9 @@
+using EnterpriseKnowledgeAssistant.Api.Middleware;
+using EnterpriseKnowledgeAssistant.Application;
 using EnterpriseKnowledgeAssistant.Application.Features.Chat;
+using EnterpriseKnowledgeAssistant.Infrastructure;
 using EnterpriseKnowledgeAssistant.Infrastructure.AI.Bedrock;
 using EnterpriseKnowledgeAssistant.Service;
-using EnterpriseKnowledgeAssistant.Infrastructure;
-using EnterpriseKnowledgeAssistant.Application;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +20,8 @@ builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
 var app = builder.Build();
+
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
