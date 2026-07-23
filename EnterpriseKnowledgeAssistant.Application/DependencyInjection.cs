@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using EnterpriseKnowledgeAssistant.Application.Features.Chat.Commands.SendMessage;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,6 +14,7 @@ namespace EnterpriseKnowledgeAssistant.Application
             // Register Validators
             // Register Application Services
             // (Nothing yet)
+            services.AddScoped<SendMessageCommandHandler>();
 
             return services;
         }

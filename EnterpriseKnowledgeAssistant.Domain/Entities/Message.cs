@@ -16,10 +16,7 @@ namespace EnterpriseKnowledgeAssistant.Domain.Entities
             Content = string.Empty;
         }
 
-        public Message(
-            Guid conversationId,
-            MessageRole role,
-            string content)
+        public Message( Guid conversationId, MessageRole role, string content)
         {
             ConversationId = conversationId;
             Role = role;

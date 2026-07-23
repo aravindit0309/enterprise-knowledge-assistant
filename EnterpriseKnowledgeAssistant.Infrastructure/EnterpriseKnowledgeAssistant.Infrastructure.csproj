@@ -9,21 +9,28 @@
   <ItemGroup>
     <PackageReference Include="AWSSDK.BedrockRuntime" Version="4.0.100.5" />
     <PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="4.0.100.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.10" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.10" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.10" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="10.0.10" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="10.0.10" />
     <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" Version="10.0.10" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.3" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\EnterpriseKnowledgeAssistant.Application\EnterpriseKnowledgeAssistant.Application.csproj" />
+    <ProjectReference Include="..\EnterpriseKnowledgeAssistant.Domain\EnterpriseKnowledgeAssistant.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Configuration\" />
+    <Folder Include="Migrations\" />
     <Folder Include="Storage\" />
-    <Folder Include="Persistence\" />
     <Folder Include="Services\" />
   </ItemGroup>
 

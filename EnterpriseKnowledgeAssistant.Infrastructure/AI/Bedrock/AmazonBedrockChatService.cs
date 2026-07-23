@@ -22,7 +22,7 @@ namespace EnterpriseKnowledgeAssistant.Infrastructure.AI.Bedrock
             _requestBuilder = requestBuilder;
         }
 
-        public async Task<ChatResponse> GetChatResponseAsync(ChatRequest request, CancellationToken cancellationToken = default)
+        public async Task<ChatResponse> SendAsync(ChatRequest request, CancellationToken cancellationToken = default)
         {
             try
             {
@@ -51,12 +51,10 @@ namespace EnterpriseKnowledgeAssistant.Infrastructure.AI.Bedrock
                     ModelUsed = invokeRequest.ModelId
                 };
             }
-            catch (Exception ex)
+            catch (AmazonBedrockRuntimeException ex)
             {
-                _logger.LogError(ex,
-                    "Error invoking Amazon Bedrock.");
-
-                throw new InvalidOperationException("Unable to generate AI response.", ex);
+                _logger.LogError(ex, "Bedrock invocation failed.");
+                throw;
             }
         }
     }

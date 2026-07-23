@@ -3,7 +3,6 @@ using EnterpriseKnowledgeAssistant.Application;
 using EnterpriseKnowledgeAssistant.Application.Features.Chat;
 using EnterpriseKnowledgeAssistant.Infrastructure;
 using EnterpriseKnowledgeAssistant.Infrastructure.AI.Bedrock;
-using EnterpriseKnowledgeAssistant.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
