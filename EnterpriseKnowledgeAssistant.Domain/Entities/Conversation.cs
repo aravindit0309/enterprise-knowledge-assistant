@@ -5,9 +5,7 @@ namespace EnterpriseKnowledgeAssistant.Domain.Entities
 {
     public class Conversation : BaseEntity
     {
-        private readonly List<Message> _messages = new();
-
-        public IReadOnlyCollection<Message> Messages => _messages.AsReadOnly();
+        public List<Message> Messages { get; private set; } = new ();
 
         public void AddUserMessage(string content)
         {
@@ -26,7 +24,9 @@ namespace EnterpriseKnowledgeAssistant.Domain.Entities
 
         private void AddMessage(MessageRole role, string content)
         {
-            _messages.Add(new Message(Id, role, content));
+            var message = new Message(Guid.Empty, role, content);
+
+            Messages.Add(message);
 
             MarkUpdated();
         }
