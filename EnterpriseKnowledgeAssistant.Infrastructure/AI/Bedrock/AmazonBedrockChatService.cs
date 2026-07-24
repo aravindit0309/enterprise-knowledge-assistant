@@ -22,11 +22,11 @@ namespace EnterpriseKnowledgeAssistant.Infrastructure.AI.Bedrock
             _requestBuilder = requestBuilder;
         }
 
-        public async Task<ChatResponse> SendAsync(ChatRequest request, CancellationToken cancellationToken = default)
+        public async Task<ChatResponse> SendAsync(IReadOnlyCollection<Domain.Entities.Message> messages, CancellationToken cancellationToken = default)
         {
             try
             {
-                var invokeRequest = _requestBuilder.Build(request);
+                var invokeRequest = _requestBuilder.Build(messages);
 
                 _logger.LogInformation( "Invoking Bedrock model {ModelId}", invokeRequest.ModelId);
 

@@ -20,23 +20,38 @@ namespace EnterpriseKnowledgeAssistant.Application.Features.Chat.Commands.SendMe
 
         public async Task<ChatResponse> HandleAsync( SendMessageCommand command, CancellationToken cancellationToken)
         {
-            var conversation = new Conversation();
+            Conversation conversation;
+
+            if(command.Request.ConversationId != null && command.Request.ConversationId != Guid.Empty)
+            {
+                conversation = await _conversationRepository.GetByIdAsync(command.Request.ConversationId.Value)
+                        ?? throw new KeyNotFoundException($"Conversation {command.Request.ConversationId.Value} was not found.");
+            }
+            else
+            {
+                conversation = new Conversation();
+            }
 
             conversation.AddUserMessage(command.Request.Message);
 
-            //await _conversationRepository.AddAsync( conversation, cancellationToken);
-
-            //await _conversationRepository.SaveChangesAsync(cancellationToken);
-
-            var response = await _chatService.SendAsync(command.Request,cancellationToken);
+            var response = await _chatService.SendAsync(conversation.Messages, cancellationToken);
 
             conversation.AddAssistantMessage(response.Response);
 
-            await _conversationRepository.AddAsync(conversation, cancellationToken); // TODO added temporarily
+            
+            if (!command.Request.ConversationId.HasValue)
+            {
+                await _conversationRepository.AddAsync(conversation, cancellationToken);
+            }
 
             await _conversationRepository.SaveChangesAsync(cancellationToken);
 
-            return response;
+            return new ChatResponse
+            {
+                ConversationId = conversation.Id,
+                Response = response.Response,
+                ModelUsed = response.ModelUsed
+            };
         }
     }
 }

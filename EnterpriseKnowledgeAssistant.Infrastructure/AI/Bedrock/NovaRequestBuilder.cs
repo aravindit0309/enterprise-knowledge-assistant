@@ -1,12 +1,10 @@
-﻿using Amazon.BedrockRuntime.Model;
-using EnterpriseKnowledgeAssistant.Application.Features.Chat.Models;
+﻿//using Amazon.BedrockRuntime.Model;
 using EnterpriseKnowledgeAssistant.Infrastructure.AI.Bedrock.Models;
 using EnterpriseKnowledgeAssistant.Infrastructure.AI.Models;
 using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
+using DomainMessageRole = EnterpriseKnowledgeAssistant.Domain.Enums.MessageRole;
 
 namespace EnterpriseKnowledgeAssistant.Infrastructure.AI.Bedrock
 {
@@ -24,24 +22,30 @@ namespace EnterpriseKnowledgeAssistant.Infrastructure.AI.Bedrock
             _options = options.Value;
         }
 
-        public InvokeModelRequest Build(ChatRequest request)
+        public Amazon.BedrockRuntime.Model.InvokeModelRequest Build(IReadOnlyCollection<Domain.Entities.Message> messages)
         {
             var novaRequest = new NovaRequest
             {
-                Messages =
-            {
-                new NovaMessage
-                {
-                    Role = "user",
-                    Content =
+                Messages = messages
+           .Select(m => new NovaMessage
+           {
+               Role = m.Role switch
+               {
+                   DomainMessageRole.User => "user",
+                   DomainMessageRole.Assistant => "assistant",
+                   DomainMessageRole.System => "system",
+                   _ => throw new InvalidOperationException($"Unsupported message role: {m.Role}")
+               },
+
+               Content = new List<TextContent>
+               {
+                    new TextContent
                     {
-                        new TextContent
-                        {
-                            Text = request.Message
-                        }
+                        Text = m.Content
                     }
-                }
-            },
+               }
+           })
+           .ToList(),
 
                 InferenceConfig = new InferenceConfig
                 {
@@ -52,7 +56,7 @@ namespace EnterpriseKnowledgeAssistant.Infrastructure.AI.Bedrock
 
             var json = JsonSerializer.Serialize(novaRequest, JsonOptions);
 
-            return new InvokeModelRequest
+            return new Amazon.BedrockRuntime.Model.InvokeModelRequest
             {
                 ModelId = _options.ModelId,
                 ContentType = "application/json",

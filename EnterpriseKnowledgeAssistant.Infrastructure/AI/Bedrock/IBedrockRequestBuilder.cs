@@ -1,10 +1,7 @@
-﻿using Amazon.BedrockRuntime.Model;
-using EnterpriseKnowledgeAssistant.Application.Features.Chat.Models;
-
-namespace EnterpriseKnowledgeAssistant.Infrastructure.AI.Bedrock
+﻿namespace EnterpriseKnowledgeAssistant.Infrastructure.AI.Bedrock
 {
     public interface IBedrockRequestBuilder
     {
-        InvokeModelRequest Build(ChatRequest request);
+        Amazon.BedrockRuntime.Model.InvokeModelRequest Build(IReadOnlyCollection<Domain.Entities.Message> messages);
     }
 }

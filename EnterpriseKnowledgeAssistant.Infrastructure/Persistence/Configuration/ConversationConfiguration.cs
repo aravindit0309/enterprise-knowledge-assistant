@@ -16,7 +16,7 @@ namespace EnterpriseKnowledgeAssistant.Infrastructure.Persistence.Configuration
 
             builder.Property(x => x.UpdatedAtUtc);
 
-            builder.HasMany(x => x.Messages).WithOne().HasForeignKey(x => x.ConversationId).IsRequired();
+            builder.HasMany(x => x.Messages).WithOne(m => m.Conversation).HasForeignKey(x => x.ConversationId).IsRequired();
         }
     }
 }

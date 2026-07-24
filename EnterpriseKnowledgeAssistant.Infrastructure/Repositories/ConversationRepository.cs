@@ -30,7 +30,34 @@ namespace EnterpriseKnowledgeAssistant.Infrastructure.Repositories
 
         public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            await _dbContext.SaveChangesAsync(cancellationToken);
+            try
+            {
+                // TODO:
+                // EF Core is tracking newly added Message entities as Modified instead of Added
+                // when appended to an existing Conversation aggregate.
+                // Workaround: explicitly mark Message entities as Added.
+                // Revisit after Sprint 5 or when upgrading EF Core/Npgsql.
+
+                foreach (var conversationEntry in _dbContext.ChangeTracker.Entries<Conversation>())
+                {
+                    foreach (var message in conversationEntry.Entity.Messages)
+                    {
+                        var entry = _dbContext.Entry(message);
+
+                        if (entry.State == EntityState.Modified)
+                        {
+                            entry.State = EntityState.Added;
+                        }
+                    }
+                }
+
+
+                await _dbContext.SaveChangesAsync(cancellationToken);
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                throw;
+            }
         }
     }
 }
