@@ -24,10 +24,7 @@ namespace EnterpriseKnowledgeAssistant.Api.Middleware
             }
             catch (Exception ex)
             {
-                _logger.LogError(
-                    ex,
-                    "Unhandled exception occurred. TraceId: {TraceId}",
-                    context.TraceIdentifier);
+                _logger.LogError(ex, "Unhandled exception occurred. TraceId: {TraceId}",context.TraceIdentifier);
 
                 context.Response.StatusCode = StatusCodes.Status500InternalServerError;
                 context.Response.ContentType = "application/json";
@@ -39,8 +36,7 @@ namespace EnterpriseKnowledgeAssistant.Api.Middleware
                     TraceId = context.TraceIdentifier
                 };
 
-                await context.Response.WriteAsync(
-                    JsonSerializer.Serialize(response));
+                await context.Response.WriteAsync(JsonSerializer.Serialize(response));
             }
         }
     }

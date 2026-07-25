@@ -3,6 +3,7 @@ using System;
 using EnterpriseKnowledgeAssistant.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EnterpriseKnowledgeAssistant.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260724154839_AddDocuments")]
+    partial class AddDocuments
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -55,33 +58,6 @@ namespace EnterpriseKnowledgeAssistant.Infrastructure.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Documents");
-                });
-
-            modelBuilder.Entity("EnterpriseKnowledgeAssistant.Domain.Documents.DocumentChunk", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("ChunkIndex")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("DocumentId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DocumentId", "ChunkIndex")
-                        .IsUnique();
-
-                    b.ToTable("DocumentChunks");
                 });
 
             modelBuilder.Entity("EnterpriseKnowledgeAssistant.Domain.Entities.Conversation", b =>
@@ -132,17 +108,6 @@ namespace EnterpriseKnowledgeAssistant.Infrastructure.Persistence.Migrations
                     b.ToTable("Messages", (string)null);
                 });
 
-            modelBuilder.Entity("EnterpriseKnowledgeAssistant.Domain.Documents.DocumentChunk", b =>
-                {
-                    b.HasOne("EnterpriseKnowledgeAssistant.Domain.Documents.Document", "Document")
-                        .WithMany("Chunks")
-                        .HasForeignKey("DocumentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Document");
-                });
-
             modelBuilder.Entity("EnterpriseKnowledgeAssistant.Domain.Entities.Message", b =>
                 {
                     b.HasOne("EnterpriseKnowledgeAssistant.Domain.Entities.Conversation", "Conversation")
@@ -152,11 +117,6 @@ namespace EnterpriseKnowledgeAssistant.Infrastructure.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("Conversation");
-                });
-
-            modelBuilder.Entity("EnterpriseKnowledgeAssistant.Domain.Documents.Document", b =>
-                {
-                    b.Navigation("Chunks");
                 });
 
             modelBuilder.Entity("EnterpriseKnowledgeAssistant.Domain.Entities.Conversation", b =>

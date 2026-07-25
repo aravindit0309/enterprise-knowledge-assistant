@@ -1,6 +1,7 @@
 using EnterpriseKnowledgeAssistant.Api.Middleware;
 using EnterpriseKnowledgeAssistant.Application;
 using EnterpriseKnowledgeAssistant.Application.Features.Chat;
+using EnterpriseKnowledgeAssistant.Application.Features.Documents.Commands.UploadDocument;
 using EnterpriseKnowledgeAssistant.Infrastructure;
 using EnterpriseKnowledgeAssistant.Infrastructure.AI.Bedrock;
 
@@ -17,6 +18,10 @@ builder.Services.Configure<BedrockOptions>(builder.Configuration.GetSection(Bedr
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddHealthChecks();
+builder.Services.AddMediatR(cfg =>
+{
+    cfg.RegisterServicesFromAssembly(typeof(UploadDocumentCommand).Assembly);
+});
 
 var app = builder.Build();
 
