@@ -1,6 +1,7 @@
 ﻿using EnterpriseKnowledgeAssistant.Domain.Documents;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Pgvector;
 
 namespace EnterpriseKnowledgeAssistant.Infrastructure.Persistence.Configuration
 {
@@ -18,11 +19,10 @@ namespace EnterpriseKnowledgeAssistant.Infrastructure.Persistence.Configuration
 
             builder.HasOne(x => x.Document).WithMany(x => x.Chunks).HasForeignKey(x => x.DocumentId).OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasIndex(x => new
-            {
-                x.DocumentId,
-                x.ChunkIndex
-            }).IsUnique();
+            builder.HasIndex(x => new { x.DocumentId,x.ChunkIndex }).IsUnique();
+
+            builder.Property(x => x.Embedding).HasConversion(embedding => embedding == null? null: new Vector(embedding),
+                vector => vector == null ? null : vector.ToArray()).HasColumnType("vector(256)");
         }
     }
 }

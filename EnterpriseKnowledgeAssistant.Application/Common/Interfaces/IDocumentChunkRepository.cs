@@ -6,5 +6,6 @@ namespace EnterpriseKnowledgeAssistant.Application.Common.Interfaces
     {
         Task AddRangeAsync(IEnumerable<DocumentChunk> chunks, CancellationToken cancellationToken);
         Task DeleteByDocumentIdAsync(Guid documentId, CancellationToken cancellationToken);
+        Task<IReadOnlyList<DocumentChunk>> SearchSimilarAsync(float[] queryEmbedding, int limit, CancellationToken cancellationToken = default);
     }
 }

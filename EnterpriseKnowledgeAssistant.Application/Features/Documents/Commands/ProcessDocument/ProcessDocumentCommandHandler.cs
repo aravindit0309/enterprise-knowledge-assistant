@@ -11,19 +11,22 @@ namespace EnterpriseKnowledgeAssistant.Application.Features.Documents.Commands.P
         private readonly ITextExtractorResolver _textExtractorResolver;
         private readonly ITextChunker _textChunker;
         private readonly IDocumentChunkRepository _documentChunkRepository;
+        private readonly IEmbeddingService _embeddingService;
 
         public ProcessDocumentCommandHandler( 
             IDocumentRepository documentRepository,
             IFileStorageService fileStorageService,
             ITextExtractorResolver textExtractorResolver,
             ITextChunker textChunker,
-            IDocumentChunkRepository documentChunkRepository)
+            IDocumentChunkRepository documentChunkRepository,
+            IEmbeddingService embeddingService)
         {
             _documentRepository = documentRepository;
             _fileStorageService = fileStorageService;
             _textExtractorResolver = textExtractorResolver;
             _textChunker = textChunker;
             _documentChunkRepository = documentChunkRepository;
+            _embeddingService = embeddingService;
         }
 
         public async Task<ProcessDocumentResponse> Handle(ProcessDocumentCommand request, CancellationToken cancellationToken)
@@ -48,15 +51,24 @@ namespace EnterpriseKnowledgeAssistant.Application.Features.Documents.Commands.P
 
             await _documentChunkRepository.DeleteByDocumentIdAsync( document.Id, cancellationToken);
 
-            var chunks = chunkContents
-                .Select((content, index) => new DocumentChunk
+            var chunks = new List<DocumentChunk>();
+
+            for (var index = 0; index < chunkContents.Count; index++)
+            {
+                var content = chunkContents[index];
+
+                var embedding = await _embeddingService.GenerateEmbeddingAsync(content, cancellationToken);
+
+                chunks.Add(new DocumentChunk
                 {
                     Id = Guid.NewGuid(),
                     DocumentId = document.Id,
                     ChunkIndex = index,
                     Content = content,
+                    Embedding = embedding.ToArray(),
                     CreatedAt = DateTime.UtcNow
-                }).ToList();
+                });
+            }
 
             if (chunks.Count > 0)
             {
