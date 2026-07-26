@@ -33,7 +33,8 @@ namespace EnterpriseKnowledgeAssistant.Infrastructure
             });
 
             services.AddDbContext<AppDbContext>(options => options.UseNpgsql(
-                configuration.GetConnectionString("KnowledgeAssistantDb")));
+                configuration.GetConnectionString("KnowledgeAssistantDb"),
+                npgsqlOptions => npgsqlOptions.UseVector()));
 
             services.AddAWSService<IAmazonBedrockRuntime>();
             services.AddScoped<IChatService, AmazonBedrockChatService>();
@@ -49,6 +50,8 @@ namespace EnterpriseKnowledgeAssistant.Infrastructure
 
             services.AddScoped<ITextChunker, TextChunker>();
             services.AddScoped<IDocumentChunkRepository, DocumentChunkRepository>();
+
+            services.AddScoped<IEmbeddingService, AmazonBedrockEmbeddingService>();
 
             services.Configure<StorageOptions>(configuration.GetSection(StorageOptions.SectionName));
 

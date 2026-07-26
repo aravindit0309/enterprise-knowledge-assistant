@@ -22,6 +22,8 @@ namespace EnterpriseKnowledgeAssistant.Infrastructure.Persistence
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
 
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.HasPostgresExtension("vector");
         }
     }
 }
