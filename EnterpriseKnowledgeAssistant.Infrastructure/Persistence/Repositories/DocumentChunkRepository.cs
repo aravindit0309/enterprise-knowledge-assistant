@@ -38,13 +38,17 @@ namespace EnterpriseKnowledgeAssistant.Infrastructure.Persistence.Repositories
         {
             var queryVector = new Vector(queryEmbedding);
 
-            return await _dbContext.DocumentChunks.FromSqlInterpolated($"""
-            SELECT *
-            FROM "DocumentChunks"
-            WHERE "Embedding" IS NOT NULL
-            ORDER BY "Embedding" <=> {queryVector}
-            LIMIT {limit}
-            """).AsNoTracking().ToListAsync(cancellationToken);
+            return await _dbContext.DocumentChunks
+                .FromSqlInterpolated($"""
+                    SELECT *
+                    FROM "DocumentChunks"
+                    WHERE "Embedding" IS NOT NULL
+                    ORDER BY "Embedding" <=> {queryVector}
+                    LIMIT {limit}
+                    """)
+                .Include(chunk => chunk.Document)
+                .AsNoTracking()
+                .ToListAsync(cancellationToken);
         }
     }
 }

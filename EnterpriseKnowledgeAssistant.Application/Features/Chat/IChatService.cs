@@ -5,6 +5,7 @@ namespace EnterpriseKnowledgeAssistant.Application.Features.Chat
 {
     public interface IChatService
     {
-        Task<ChatResponse> SendAsync(IReadOnlyCollection<Message> messages, CancellationToken cancellationToken = default);        
+        Task<ChatResponse> SendAsync(IReadOnlyCollection<Message> messages,
+            string? knowledgeContext = null, CancellationToken cancellationToken = default);        
     }
 }
