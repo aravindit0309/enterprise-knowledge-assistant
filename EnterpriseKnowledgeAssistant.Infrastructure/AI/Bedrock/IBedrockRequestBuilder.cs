@@ -2,6 +2,7 @@
 {
     public interface IBedrockRequestBuilder
     {
-        Amazon.BedrockRuntime.Model.InvokeModelRequest Build(IReadOnlyCollection<Domain.Entities.Message> messages);
+        Amazon.BedrockRuntime.Model.InvokeModelRequest Build(IReadOnlyCollection<Domain.Entities.Message> messages,
+            string? knowledgeContext = null);
     }
 }

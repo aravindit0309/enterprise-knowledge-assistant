@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace EnterpriseKnowledgeAssistant.Infrastructure.Repositories
+namespace EnterpriseKnowledgeAssistant.Infrastructure.Persistence.Repositories
 {
     public class ConversationRepository  : IConversationRepository
     {

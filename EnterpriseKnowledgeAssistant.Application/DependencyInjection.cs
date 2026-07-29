@@ -1,4 +1,5 @@
 ﻿using EnterpriseKnowledgeAssistant.Application.Features.Chat.Commands.SendMessage;
+using EnterpriseKnowledgeAssistant.Application.Features.Documents.Commands.UploadDocument;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ namespace EnterpriseKnowledgeAssistant.Application
             // Register Application Services
             // (Nothing yet)
             services.AddScoped<SendMessageCommandHandler>();
+            services.AddScoped<UploadDocumentCommandHandler>();
 
             return services;
         }

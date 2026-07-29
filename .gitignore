@@ -10,3 +10,14 @@
 /EnterpriseKnowledgeAssistant.Infrastructure/obj/Debug/net10.0
 /EnterpriseKnowledgeAssistant.Infrastructure/obj
 /EnterpriseKnowledgeAssistant.Domain/obj
+/EnterpriseKnowledgeAssistant.Api/bin/Debug/net10.0
+/EnterpriseKnowledgeAssistant.Api/obj/Debug/net10.0/ref
+/EnterpriseKnowledgeAssistant.Api/obj
+/EnterpriseKnowledgeAssistant.Api/src/obj
+/EnterpriseKnowledgeAssistant.Application/bin/Debug/net10.0
+/EnterpriseKnowledgeAssistant.Domain/bin/Debug/net10.0
+/EnterpriseKnowledgeAssistant.Infrastructure/bin/Debug/net10.0
+/EnterpriseKnowledgeAssistant.Infrastructure.Enum/obj
+/EnterpriseKnowledgeAssistant.Tests
+/EnterpriseKnowledgeAssistant.Api/EnterpriseKnowledgeAssistant.Api.csproj.user
+/EnterpriseKnowledgeAssistant.Api/uploads

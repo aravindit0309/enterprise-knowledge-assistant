@@ -1,4 +1,5 @@
-﻿using EnterpriseKnowledgeAssistant.Domain.Entities;
+﻿using EnterpriseKnowledgeAssistant.Domain.Documents;
+using EnterpriseKnowledgeAssistant.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace EnterpriseKnowledgeAssistant.Infrastructure.Persistence
@@ -11,6 +12,8 @@ namespace EnterpriseKnowledgeAssistant.Infrastructure.Persistence
         }
 
         public DbSet<Conversation> Conversations => Set<Conversation>();
+        public DbSet<Document> Documents => Set<Document>();
+        public DbSet<DocumentChunk> DocumentChunks => Set<DocumentChunk>();
 
         public DbSet<EnterpriseKnowledgeAssistant.Domain.Entities.Message> Messages => Set<EnterpriseKnowledgeAssistant.Domain.Entities.Message>();
 
@@ -19,6 +22,8 @@ namespace EnterpriseKnowledgeAssistant.Infrastructure.Persistence
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
 
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.HasPostgresExtension("vector");
         }
     }
 }

@@ -5,5 +5,6 @@
         public Guid ConversationId { get; set; }
         public string? Response { get; set; }
         public string? ModelUsed { get; set; }
+        public IReadOnlyList<ChatSource> Sources { get; set; } = Array.Empty<ChatSource>();
     }
 }
