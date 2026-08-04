@@ -1,8 +1,5 @@
 ﻿using EnterpriseKnowledgeAssistant.Application.Common.Interfaces;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace EnterpriseKnowledgeAssistant.Application.Features.Search.SemanticSearch
 {
@@ -36,6 +33,7 @@ namespace EnterpriseKnowledgeAssistant.Application.Features.Search.SemanticSearc
             return chunks
                 .Select(chunk => new SemanticSearchResult(
                     chunk.DocumentId,
+                    chunk.Document.FileName,
                     chunk.ChunkIndex,
                     chunk.Content))
                 .ToList();

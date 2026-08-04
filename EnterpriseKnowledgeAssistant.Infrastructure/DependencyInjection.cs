@@ -1,10 +1,12 @@
 ﻿using Amazon;
 using Amazon.BedrockRuntime;
 using Amazon.Extensions.NETCore.Setup;
+using EnterpriseKnowledgeAssistant.Application.Abstractions.Agents;
 using EnterpriseKnowledgeAssistant.Application.Common.Interfaces;
 using EnterpriseKnowledgeAssistant.Application.Features.Chat;
 using EnterpriseKnowledgeAssistant.Application.Interfaces;
 using EnterpriseKnowledgeAssistant.Domain.Documents;
+using EnterpriseKnowledgeAssistant.Infrastructure.Agents;
 using EnterpriseKnowledgeAssistant.Infrastructure.AI.Bedrock;
 using EnterpriseKnowledgeAssistant.Infrastructure.Persistence;
 using EnterpriseKnowledgeAssistant.Infrastructure.Persistence.Repositories;
@@ -15,6 +17,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace EnterpriseKnowledgeAssistant.Infrastructure
 {
@@ -52,6 +55,7 @@ namespace EnterpriseKnowledgeAssistant.Infrastructure
             services.AddScoped<IDocumentChunkRepository, DocumentChunkRepository>();
 
             services.AddScoped<IEmbeddingService, AmazonBedrockEmbeddingService>();
+            services.AddScoped<IAgentDecisionService, BedrockAgentDecisionService>();
 
             services.Configure<StorageOptions>(configuration.GetSection(StorageOptions.SectionName));
 

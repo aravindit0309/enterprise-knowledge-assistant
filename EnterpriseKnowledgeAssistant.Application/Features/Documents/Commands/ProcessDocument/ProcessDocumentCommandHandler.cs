@@ -17,7 +17,7 @@ namespace EnterpriseKnowledgeAssistant.Application.Features.Documents.Commands.P
             IDocumentRepository documentRepository,
             IFileStorageService fileStorageService,
             ITextExtractorResolver textExtractorResolver,
-            ITextChunker textChunker,
+            ITextChunker textChunker,   
             IDocumentChunkRepository documentChunkRepository,
             IEmbeddingService embeddingService)
         {
