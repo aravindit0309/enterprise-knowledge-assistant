@@ -4,6 +4,7 @@ using EnterpriseKnowledgeAssistant.Infrastructure.AI.Models;
 using Microsoft.Extensions.Options;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using DomainMessageRole = EnterpriseKnowledgeAssistant.Domain.Enums.MessageRole;
 
 namespace EnterpriseKnowledgeAssistant.Infrastructure.AI.Bedrock
@@ -14,7 +15,8 @@ namespace EnterpriseKnowledgeAssistant.Infrastructure.AI.Bedrock
 
         private static readonly JsonSerializerOptions JsonOptions = new()
         {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
         };
 
         public NovaRequestBuilder(IOptions<BedrockOptions> options)
@@ -55,26 +57,33 @@ namespace EnterpriseKnowledgeAssistant.Infrastructure.AI.Bedrock
             if (!string.IsNullOrWhiteSpace(knowledgeContext))
             {
                 system = new List<TextContent>
-                {
-                    new TextContent
-                    {
-                        Text = $"""
-                            You are an enterprise knowledge assistant.
+{
+    new TextContent
+    {
+        Text = $"""
+        You are an enterprise knowledge assistant.
 
-                            Answer the user's question using only the enterprise knowledge provided below.
+        Your primary responsibility is to answer questions using ONLY the enterprise knowledge provided below.
 
-                            Rules:
-                            - Base your answer on the provided enterprise knowledge.
-                            - Do not invent facts that are not supported by the provided knowledge.
-                            - If the provided knowledge does not contain enough information to answer the question, say that the answer could not be found in the available enterprise knowledge.
-                            - Answer clearly and concisely.
+        Rules:
 
-                            Enterprise knowledge:
+        - Treat the provided enterprise knowledge as the authoritative source.
+        - Answer directly from the enterprise knowledge whenever possible.
+        - Do NOT use your own general knowledge, assumptions, or generic HR/company policy guidance.
+        - Do NOT refuse to answer unless the retrieved enterprise knowledge explicitly indicates that the request cannot be answered.
+        - If the enterprise knowledge contains the answer, summarize it clearly and accurately.
+        - If multiple pieces of enterprise knowledge are relevant, combine them into a single coherent answer.
+        - If the enterprise knowledge does not contain enough information to answer the question, respond with:
+          "The requested information could not be found in the available enterprise knowledge."
+        - Do not invent facts.
+        - Keep the response concise, factual, and grounded in the provided knowledge.
 
-                            {knowledgeContext}
-                            """
-                    }
-                };
+        Enterprise knowledge:
+
+        {knowledgeContext}
+        """
+    }
+};
             }
 
             var novaRequest = new NovaRequest

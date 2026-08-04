@@ -9,6 +9,7 @@ namespace EnterpriseKnowledgeAssistant.Application.Features.Search.SemanticSearc
 
     public sealed record SemanticSearchResult(
         Guid DocumentId,
+        string DocumentName,
         int ChunkIndex,
         string Content);
 }

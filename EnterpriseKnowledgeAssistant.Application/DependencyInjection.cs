@@ -1,9 +1,8 @@
-﻿using EnterpriseKnowledgeAssistant.Application.Features.Chat.Commands.SendMessage;
+﻿using EnterpriseKnowledgeAssistant.Application.Abstractions.Agents;
+using EnterpriseKnowledgeAssistant.Application.Abstractions.Agents.Tools;
+using EnterpriseKnowledgeAssistant.Application.Features.Chat.Commands.SendMessage;
 using EnterpriseKnowledgeAssistant.Application.Features.Documents.Commands.UploadDocument;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace EnterpriseKnowledgeAssistant.Application
 {
@@ -17,6 +16,8 @@ namespace EnterpriseKnowledgeAssistant.Application
             // (Nothing yet)
             services.AddScoped<SendMessageCommandHandler>();
             services.AddScoped<UploadDocumentCommandHandler>();
+            services.AddScoped<IAgentOrchestrator, AgentOrchestrator>();
+            services.AddScoped<IAgentTool, SearchKnowledgeBaseTool>();
 
             return services;
         }
