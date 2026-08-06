@@ -8,6 +8,7 @@ using EnterpriseKnowledgeAssistant.Application.Interfaces;
 using EnterpriseKnowledgeAssistant.Domain.Documents;
 using EnterpriseKnowledgeAssistant.Infrastructure.Agents;
 using EnterpriseKnowledgeAssistant.Infrastructure.AI.Bedrock;
+using EnterpriseKnowledgeAssistant.Infrastructure.AI.Planner;
 using EnterpriseKnowledgeAssistant.Infrastructure.Persistence;
 using EnterpriseKnowledgeAssistant.Infrastructure.Persistence.Repositories;
 using EnterpriseKnowledgeAssistant.Infrastructure.Storage;
@@ -55,7 +56,8 @@ namespace EnterpriseKnowledgeAssistant.Infrastructure
             services.AddScoped<IDocumentChunkRepository, DocumentChunkRepository>();
 
             services.AddScoped<IEmbeddingService, AmazonBedrockEmbeddingService>();
-            services.AddScoped<IAgentDecisionService, BedrockAgentDecisionService>();
+            services.AddScoped<IAgentPlanner, AmazonBedrockAgentPlanner>();
+            services.AddScoped<IPlannerPromptBuilder, NovaPlannerPromptBuilder>();
 
             services.Configure<StorageOptions>(configuration.GetSection(StorageOptions.SectionName));
 

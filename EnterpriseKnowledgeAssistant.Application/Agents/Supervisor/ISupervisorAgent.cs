@@ -6,7 +6,6 @@ namespace EnterpriseKnowledgeAssistant.Application.Agents.Supervisor
     public interface ISupervisorAgent
     {
         Task<ExecutionPlan> CreatePlanAsync(
-    AgentRequest request,
-    CancellationToken cancellationToken = default);
+    AgentRequest request, CancellationToken cancellationToken = default);
     }
 }

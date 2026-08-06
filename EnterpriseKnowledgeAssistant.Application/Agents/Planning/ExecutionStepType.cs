@@ -2,8 +2,7 @@
 {
     public enum ExecutionStepType
     {
-        Document,
-        Memory,
-        ResponseComposer
+        Retrieve,
+        Respond
     }
 }

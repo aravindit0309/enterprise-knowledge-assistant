@@ -1,22 +1,32 @@
 ﻿using EnterpriseKnowledgeAssistant.Application.Abstractions.Agents;
 using EnterpriseKnowledgeAssistant.Application.Agents.Planning;
-using EnterpriseKnowledgeAssistant.Application.Interfaces;
 
 namespace EnterpriseKnowledgeAssistant.Application.Agents.Supervisor
 {
     public sealed class SupervisorAgent : ISupervisorAgent
     {
-        private readonly IPlannerService _plannerService;
+        private readonly IAgentPlanner _agentPlanner;
+        private readonly IEnumerable<IAgentTool> _tools;
 
-        public SupervisorAgent(IPlannerService plannerService)
+
+        public SupervisorAgent(IAgentPlanner agentPlanner, IEnumerable<IAgentTool> tools)
         {
-            _plannerService = plannerService;
+            _agentPlanner = agentPlanner;
+            _tools = tools;
         }
 
-        public Task<ExecutionPlan> CreatePlanAsync(AgentRequest request,CancellationToken cancellationToken = default)
+        public Task<ExecutionPlan> CreatePlanAsync(AgentRequest request, CancellationToken cancellationToken = default)
         {
-            return _plannerService.CreatePlanAsync(
-                request, cancellationToken);
+            var toolDefinitions = _tools
+             .Select(t => new AgentToolDefinition(
+                 t.Name,
+                 t.Description))
+             .ToList();
+
+            return _agentPlanner.PlanAsync(
+                request,
+                toolDefinitions,
+                cancellationToken);
         }
     }
 }
