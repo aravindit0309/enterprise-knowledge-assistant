@@ -1,4 +1,5 @@
 ﻿using EnterpriseKnowledgeAssistant.Application.Abstractions.Agents.Tools;
+using EnterpriseKnowledgeAssistant.Application.Agents.Planning;
 using EnterpriseKnowledgeAssistant.Application.Features.Chat;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
@@ -21,21 +22,9 @@ namespace EnterpriseKnowledgeAssistant.Application.Abstractions.Agents
             _logger = logger;
         }
 
-        public async Task<AgentResult> ExecuteAsync(AgentRequest request, CancellationToken cancellationToken = default)
+        public async Task<AgentResult> ExecuteAsync(ExecutionPlan executionPlan, AgentRequest request, CancellationToken cancellationToken = default)
         {
             var totalStopwatch = Stopwatch.StartNew();
-
-            _logger.LogInformation(
-                """
-            ======================================================
-            Agent Request Started
-
-            ConversationId : {ConversationId}
-
-            User Message:
-            {UserMessage}
-            ======================================================
-            """, request.ConversationId, request.UserMessage);
 
             var orderedMessages = request.Messages.OrderBy(m => m.CreatedAtUtc).ToList();
 
@@ -53,43 +42,19 @@ namespace EnterpriseKnowledgeAssistant.Application.Abstractions.Agents
 
             decisionStopwatch.Stop();
 
-            _logger.LogInformation(
-                """
-            Agent Decision
-
-            Requires Tool : {RequiresTool}
-            Tool          : {ToolName}
-            Tool Input    : {ToolInput}
-
-            Decision Time : {ElapsedMilliseconds} ms
-            """, decision.RequiresTool, decision.ToolName ?? "None", decision.ToolInput ?? "N/A", decisionStopwatch.ElapsedMilliseconds);
-
             // -------------------------------
             // No Tool Required
             // -------------------------------
 
             if (!decision.RequiresTool)
             {
-                _logger.LogInformation("No tool required. Generating direct response.");
-
                 var generationStopwatch = Stopwatch.StartNew();
 
                 var response = await _chatService.SendAsync(orderedMessages, null, cancellationToken);
 
-                generationStopwatch.Stop();
-
-                _logger.LogInformation("Direct response generated in {ElapsedMilliseconds} ms",generationStopwatch.ElapsedMilliseconds);
+                generationStopwatch.Stop();               
 
                 totalStopwatch.Stop();
-
-                _logger.LogInformation(
-                    """
-                ======================================================
-                Agent Request Completed
-
-                Total Duration : {ElapsedMilliseconds} ms
-                ======================================================
-                """, totalStopwatch.ElapsedMilliseconds);
 
                 return new AgentResult(
                     response.Response,
@@ -105,15 +70,6 @@ namespace EnterpriseKnowledgeAssistant.Application.Abstractions.Agents
 
             if (tool is null)
             {
-                _logger.LogWarning(
-                    """
-                Agent selected an unknown tool.
-
-                ToolName : {ToolName}
-
-                Falling back to direct response.
-                """, decision.ToolName);
-
                 var generationStopwatch = Stopwatch.StartNew();
 
                 var response = await _chatService.SendAsync(orderedMessages, null, cancellationToken);
@@ -121,15 +77,6 @@ namespace EnterpriseKnowledgeAssistant.Application.Abstractions.Agents
                 generationStopwatch.Stop();
 
                 totalStopwatch.Stop();
-
-                _logger.LogInformation(
-                    """
-                ======================================================
-                Agent Request Completed
-
-                Total Duration : {ElapsedMilliseconds} ms
-                ======================================================
-                """, totalStopwatch.ElapsedMilliseconds);
 
                 return new AgentResult(
                     response.Response,
@@ -149,21 +96,6 @@ namespace EnterpriseKnowledgeAssistant.Application.Abstractions.Agents
 
             toolStopwatch.Stop();
 
-            _logger.LogInformation(
-                """
-            Tool Execution
-
-            Tool              : {ToolName}
-            Success           : {Success}
-            Sources Retrieved : {SourceCount}
-            Duration          : {ElapsedMilliseconds} ms
-            """,tool.Name, toolResult.Success, toolResult.Sources.Count, toolStopwatch.ElapsedMilliseconds);
-
-            if (!toolResult.Success)
-            {
-                _logger.LogInformation("Knowledge search returned no matching documents.");
-            }
-
             // -------------------------------
             // Final Grounded Response
             // -------------------------------
@@ -173,18 +105,8 @@ namespace EnterpriseKnowledgeAssistant.Application.Abstractions.Agents
             var groundedResponse = await _chatService.SendAsync(orderedMessages, toolResult.Content, cancellationToken);
 
             generationStopwatchGrounded.Stop();
-             _logger.LogInformation("Grounded response generated in {ElapsedMilliseconds} ms", generationStopwatchGrounded.ElapsedMilliseconds);
 
             totalStopwatch.Stop();
-
-            _logger.LogInformation(
-                """
-            ======================================================
-            Agent Request Completed
-
-            Total Duration : {ElapsedMilliseconds} ms
-            ======================================================
-            """,  totalStopwatch.ElapsedMilliseconds);
 
             return new AgentResult(
                 groundedResponse.Response,

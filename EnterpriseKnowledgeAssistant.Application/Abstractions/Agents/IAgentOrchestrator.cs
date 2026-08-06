@@ -1,7 +1,9 @@
-﻿namespace EnterpriseKnowledgeAssistant.Application.Abstractions.Agents
+﻿using EnterpriseKnowledgeAssistant.Application.Agents.Planning;
+
+namespace EnterpriseKnowledgeAssistant.Application.Abstractions.Agents
 {
     public interface IAgentOrchestrator
     {
-        Task<AgentResult> ExecuteAsync(  AgentRequest request, CancellationToken cancellationToken = default);
+        Task<AgentResult> ExecuteAsync(ExecutionPlan executionPlan, AgentRequest request, CancellationToken cancellationToken = default);
     }
 }
