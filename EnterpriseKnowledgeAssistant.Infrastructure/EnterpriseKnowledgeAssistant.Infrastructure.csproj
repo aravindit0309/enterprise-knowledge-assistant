@@ -32,6 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="AI\Mappers\" />
     <Folder Include="Options\" />
     <Folder Include="Services\" />
   </ItemGroup>
