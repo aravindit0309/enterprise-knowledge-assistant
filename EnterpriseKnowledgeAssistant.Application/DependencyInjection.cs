@@ -20,6 +20,9 @@ namespace EnterpriseKnowledgeAssistant.Application
             services.AddScoped<IAgentOrchestrator, AgentOrchestrator>();
             services.AddScoped<IAgentTool, SearchKnowledgeBaseTool>();
             services.AddScoped<ISupervisorAgent, SupervisorAgent>();
+            services.AddScoped<IAgentTool, StoreMemoryTool>();
+            services.AddScoped<IAgentTool, SearchMemoryTool>();
+            services.AddScoped<IAgentTool, ExecuteSqlTool>();
 
             return services;
         }

@@ -28,7 +28,7 @@ namespace EnterpriseKnowledgeAssistant.Application.Abstractions.Agents
 
             var knowledgeContexts = new List<string>();
             var sources = new List<AgentSource>();
-            
+
             foreach (var step in executionPlan.Steps.OrderBy(s => s.Order))
             {
                 switch (step.Type)
@@ -71,6 +71,85 @@ namespace EnterpriseKnowledgeAssistant.Application.Abstractions.Agents
                             return new AgentResult(response.Response, response.ModelUsed, sources);
                         }
 
+                    case ExecutionStepType.StoreMemory:
+                        {
+                            if (string.IsNullOrWhiteSpace(step.ToolName))
+                            {
+                                continue;
+                            }
+
+                            var tool = _tools.FirstOrDefault(t =>
+                                string.Equals(t.Name, step.ToolName, StringComparison.OrdinalIgnoreCase));
+
+                            if (tool is null)
+                            {
+                                _logger.LogWarning("Planner requested unknown tool '{ToolName}'.", step.ToolName);
+
+                                continue;
+                            }
+
+                            var toolInput = string.IsNullOrWhiteSpace(step.Input) ? request.UserMessage : step.Input;
+
+                            var toolResult = await tool.ExecuteAsync(toolInput, cancellationToken);
+
+                            knowledgeContexts.Add(toolResult.Content);
+
+                            break;
+                        }
+
+                    case ExecutionStepType.SearchMemory:
+                        {
+                            if (string.IsNullOrWhiteSpace(step.ToolName))
+                            {
+                                continue;
+                            }
+
+                            var tool = _tools.FirstOrDefault(t =>
+                                string.Equals(
+                                    t.Name,
+                                    step.ToolName,
+                                    StringComparison.OrdinalIgnoreCase));
+
+                            if (tool is null)
+                            {
+                                _logger.LogWarning("Planner requested unknown tool '{ToolName}'.", step.ToolName);
+                                continue;
+                            }
+
+                            var toolInput = string.IsNullOrWhiteSpace(step.Input) ? request.UserMessage : step.Input;
+
+                            var toolResult = await tool.ExecuteAsync(toolInput, cancellationToken);
+
+                            knowledgeContexts.Add(toolResult.Content);
+                            sources.AddRange(toolResult.Sources);
+
+                            break;
+                        }
+                    case ExecutionStepType.ExecuteSql:
+                        {
+                            if (string.IsNullOrWhiteSpace(step.ToolName))
+                            {
+                                continue;
+                            }
+
+                            var tool = _tools.FirstOrDefault(t =>string.Equals(t.Name, step.ToolName, StringComparison.OrdinalIgnoreCase));
+
+                            if (tool is null)
+                            {
+                                _logger.LogWarning( "Planner requested unknown tool '{ToolName}'.", step.ToolName);
+
+                                continue;
+                            }
+
+                            var toolInput = string.IsNullOrWhiteSpace(step.Input) ? request.UserMessage : step.Input;
+
+                            var toolResult = await tool.ExecuteAsync(toolInput, cancellationToken);
+
+                            knowledgeContexts.Add(toolResult.Content);
+
+                            break;
+                        }
+
                     default:
                         {
                             _logger.LogWarning("Unsupported execution step type '{StepType}'.",step.Type);
@@ -83,6 +162,7 @@ namespace EnterpriseKnowledgeAssistant.Application.Abstractions.Agents
             var combinedKnowledge = knowledgeContexts.Any() ? 
                 string.Join(Environment.NewLine + Environment.NewLine, knowledgeContexts) : null;
 
+            
             var fallbackResponse =  await _chatService.SendAsync(orderedMessages, combinedKnowledge, cancellationToken);
 
             totalStopwatch.Stop();
