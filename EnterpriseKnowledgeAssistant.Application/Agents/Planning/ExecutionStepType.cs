@@ -3,6 +3,9 @@
     public enum ExecutionStepType
     {
         Retrieve,
+        StoreMemory,
+        SearchMemory,
+        ExecuteSql,
         Respond
     }
 }

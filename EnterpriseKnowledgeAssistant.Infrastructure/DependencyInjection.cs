@@ -2,6 +2,8 @@
 using Amazon.BedrockRuntime;
 using Amazon.Extensions.NETCore.Setup;
 using EnterpriseKnowledgeAssistant.Application.Abstractions.Agents;
+using EnterpriseKnowledgeAssistant.Application.Abstractions.Data;
+using EnterpriseKnowledgeAssistant.Application.Abstractions.Persistence;
 using EnterpriseKnowledgeAssistant.Application.Common.Interfaces;
 using EnterpriseKnowledgeAssistant.Application.Features.Chat;
 using EnterpriseKnowledgeAssistant.Application.Interfaces;
@@ -58,6 +60,11 @@ namespace EnterpriseKnowledgeAssistant.Infrastructure
             services.AddScoped<IEmbeddingService, AmazonBedrockEmbeddingService>();
             services.AddScoped<IAgentPlanner, AmazonBedrockAgentPlanner>();
             services.AddScoped<IPlannerPromptBuilder, NovaPlannerPromptBuilder>();
+
+            services.AddScoped<IMemoryRepository, MemoryRepository>();
+            services.AddScoped<ISqlQueryExecutor, SqlQueryExecutor>();
+            services.AddScoped<ISqlValidator, SqlValidator>();
+            services.AddScoped<ISqlGenerator, AmazonBedrockSqlGenerator>();
 
             services.Configure<StorageOptions>(configuration.GetSection(StorageOptions.SectionName));
 

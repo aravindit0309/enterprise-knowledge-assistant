@@ -1,5 +1,6 @@
 ﻿using EnterpriseKnowledgeAssistant.Domain.Documents;
 using EnterpriseKnowledgeAssistant.Domain.Entities;
+using EnterpriseKnowledgeAssistant.Domain.Memory;
 using Microsoft.EntityFrameworkCore;
 
 namespace EnterpriseKnowledgeAssistant.Infrastructure.Persistence
@@ -14,8 +15,8 @@ namespace EnterpriseKnowledgeAssistant.Infrastructure.Persistence
         public DbSet<Conversation> Conversations => Set<Conversation>();
         public DbSet<Document> Documents => Set<Document>();
         public DbSet<DocumentChunk> DocumentChunks => Set<DocumentChunk>();
-
         public DbSet<EnterpriseKnowledgeAssistant.Domain.Entities.Message> Messages => Set<EnterpriseKnowledgeAssistant.Domain.Entities.Message>();
+        public DbSet<MemoryRecord> MemoryRecords => Set<MemoryRecord>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
