@@ -56,7 +56,7 @@ namespace EnterpriseKnowledgeAssistant.Application.Abstractions.Agents
 
                             var toolResult = await tool.ExecuteAsync(toolInput, cancellationToken);
 
-                            knowledgeContexts.Add(toolResult.Content);
+                            knowledgeContexts.Add(BuildToolContext(tool, toolInput, toolResult));
                             sources.AddRange(toolResult.Sources);
 
                             break;
@@ -92,7 +92,7 @@ namespace EnterpriseKnowledgeAssistant.Application.Abstractions.Agents
 
                             var toolResult = await tool.ExecuteAsync(toolInput, cancellationToken);
 
-                            knowledgeContexts.Add(toolResult.Content);
+                            knowledgeContexts.Add(BuildToolContext(tool, toolInput, toolResult));
 
                             break;
                         }
@@ -120,7 +120,7 @@ namespace EnterpriseKnowledgeAssistant.Application.Abstractions.Agents
 
                             var toolResult = await tool.ExecuteAsync(toolInput, cancellationToken);
 
-                            knowledgeContexts.Add(toolResult.Content);
+                            knowledgeContexts.Add(BuildToolContext(tool, toolInput, toolResult));
                             sources.AddRange(toolResult.Sources);
 
                             break;
@@ -145,7 +145,7 @@ namespace EnterpriseKnowledgeAssistant.Application.Abstractions.Agents
 
                             var toolResult = await tool.ExecuteAsync(toolInput, cancellationToken);
 
-                            knowledgeContexts.Add(toolResult.Content);
+                            knowledgeContexts.Add(BuildToolContext(tool, toolInput, toolResult));
 
                             break;
                         }
@@ -168,6 +168,19 @@ namespace EnterpriseKnowledgeAssistant.Application.Abstractions.Agents
             totalStopwatch.Stop();
 
             return new AgentResult(fallbackResponse.Response, fallbackResponse.ModelUsed, sources);
+        }
+
+
+        //sending the tool name to nova to provide a better context for the tool execution result.
+        //This will help nova to understand the context of the tool execution and provide a more accurate response.
+        private static string BuildToolContext(IAgentTool tool, string input,AgentToolResult result)
+        {
+            return $"""
+                Tool: {tool.Name}
+                Request: {input}
+                Result:
+                {result.Content}
+                """;
         }
     }
 }

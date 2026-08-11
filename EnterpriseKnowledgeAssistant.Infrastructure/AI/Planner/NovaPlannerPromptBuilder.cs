@@ -15,10 +15,7 @@ public sealed class NovaPlannerPromptBuilder : IPlannerPromptBuilder
 
         var toolDescriptions = string.Join(Environment.NewLine, tools.Select(t => $"- {t.Name}: {t.Description}"));
 
-        var validToolNames = string.Join(Environment.NewLine,tools.Select(t => $"- {t.Name}"));
-
-        var knowledgeBaseToolName = tools.FirstOrDefault(t =>
-        string.Equals(t.Name, AgentToolNames.SearchKnowledgeBase, StringComparison.OrdinalIgnoreCase))?.Name;
+        var validToolNames = string.Join(Environment.NewLine,tools.Select(t => $"- {t.Name}"));        
 
         var promptPath = Path.Combine(AppContext.BaseDirectory, "AI", "Planner", "Prompts", PromptFileName);
 
@@ -33,7 +30,6 @@ public sealed class NovaPlannerPromptBuilder : IPlannerPromptBuilder
             .Replace("{{TOOL_DESCRIPTIONS}}", toolDescriptions)
             .Replace("{{VALID_TOOL_NAMES}}", validToolNames)
             .Replace("{{CONVERSATION_HISTORY}}", conversationHistory)
-            .Replace("{{USER_MESSAGE}}", request.UserMessage)
-            .Replace("{knowledgeBaseTool}", knowledgeBaseToolName ?? AgentToolNames.SearchKnowledgeBase);
+            .Replace("{{USER_MESSAGE}}", request.UserMessage);
     }
 }
