@@ -31,15 +31,15 @@ namespace EnterpriseKnowledgeAssistant.Application.Abstractions.Agents
 
             foreach (var step in executionPlan.Steps.OrderBy(s => s.Order))
             {
+                if (string.IsNullOrWhiteSpace(step.ToolName))
+                {
+                    continue;
+                }
+
                 switch (step.Type)
                 {
                     case ExecutionStepType.Retrieve:
                         {
-                            if (string.IsNullOrWhiteSpace(step.ToolName))
-                            {
-                                continue;
-                            }
-
                             var tool = _tools.FirstOrDefault(t =>
                                 string.Equals(
                                     t.Name,
@@ -56,7 +56,7 @@ namespace EnterpriseKnowledgeAssistant.Application.Abstractions.Agents
 
                             var toolResult = await tool.ExecuteAsync(toolInput, cancellationToken);
 
-                            knowledgeContexts.Add(toolResult.Content);
+                            knowledgeContexts.Add(BuildToolContext(tool, toolInput, toolResult));
                             sources.AddRange(toolResult.Sources);
 
                             break;
@@ -73,18 +73,12 @@ namespace EnterpriseKnowledgeAssistant.Application.Abstractions.Agents
 
                     case ExecutionStepType.StoreMemory:
                         {
-                            if (string.IsNullOrWhiteSpace(step.ToolName))
-                            {
-                                continue;
-                            }
-
-                            var tool = _tools.FirstOrDefault(t =>
+                           var tool = _tools.FirstOrDefault(t =>
                                 string.Equals(t.Name, step.ToolName, StringComparison.OrdinalIgnoreCase));
 
                             if (tool is null)
                             {
                                 _logger.LogWarning("Planner requested unknown tool '{ToolName}'.", step.ToolName);
-
                                 continue;
                             }
 
@@ -92,18 +86,13 @@ namespace EnterpriseKnowledgeAssistant.Application.Abstractions.Agents
 
                             var toolResult = await tool.ExecuteAsync(toolInput, cancellationToken);
 
-                            knowledgeContexts.Add(toolResult.Content);
+                            knowledgeContexts.Add(BuildToolContext(tool, toolInput, toolResult));
 
                             break;
                         }
 
                     case ExecutionStepType.SearchMemory:
                         {
-                            if (string.IsNullOrWhiteSpace(step.ToolName))
-                            {
-                                continue;
-                            }
-
                             var tool = _tools.FirstOrDefault(t =>
                                 string.Equals(
                                     t.Name,
@@ -120,24 +109,18 @@ namespace EnterpriseKnowledgeAssistant.Application.Abstractions.Agents
 
                             var toolResult = await tool.ExecuteAsync(toolInput, cancellationToken);
 
-                            knowledgeContexts.Add(toolResult.Content);
+                            knowledgeContexts.Add(BuildToolContext(tool, toolInput, toolResult));
                             sources.AddRange(toolResult.Sources);
 
                             break;
                         }
                     case ExecutionStepType.ExecuteSql:
                         {
-                            if (string.IsNullOrWhiteSpace(step.ToolName))
-                            {
-                                continue;
-                            }
-
                             var tool = _tools.FirstOrDefault(t =>string.Equals(t.Name, step.ToolName, StringComparison.OrdinalIgnoreCase));
 
                             if (tool is null)
                             {
                                 _logger.LogWarning( "Planner requested unknown tool '{ToolName}'.", step.ToolName);
-
                                 continue;
                             }
 
@@ -145,7 +128,30 @@ namespace EnterpriseKnowledgeAssistant.Application.Abstractions.Agents
 
                             var toolResult = await tool.ExecuteAsync(toolInput, cancellationToken);
 
-                            knowledgeContexts.Add(toolResult.Content);
+                            knowledgeContexts.Add(BuildToolContext(tool, toolInput, toolResult));
+
+                            break;
+                        }
+                    case ExecutionStepType.WebResearch:
+                        {
+                            if (string.IsNullOrWhiteSpace(step.ToolName))
+                            {
+                                continue;
+                            }
+
+                            var tool = _tools.FirstOrDefault(t => string.Equals(t.Name, step.ToolName, StringComparison.OrdinalIgnoreCase));
+
+                            if (tool is null)
+                            {
+                                _logger.LogWarning("Planner requested unknown tool '{ToolName}'.", step.ToolName);
+                                continue;
+                            }
+
+                            var toolInput = string.IsNullOrWhiteSpace(step.Input) ? request.UserMessage : step.Input;
+
+                            var toolResult = await tool.ExecuteAsync(toolInput, cancellationToken);
+
+                            knowledgeContexts.Add( BuildToolContext(tool, toolInput, toolResult));
 
                             break;
                         }
@@ -168,6 +174,19 @@ namespace EnterpriseKnowledgeAssistant.Application.Abstractions.Agents
             totalStopwatch.Stop();
 
             return new AgentResult(fallbackResponse.Response, fallbackResponse.ModelUsed, sources);
+        }
+
+
+        //sending the tool name to nova to provide a better context for the tool execution result.
+        //This will help nova to understand the context of the tool execution and provide a more accurate response.
+        private static string BuildToolContext(IAgentTool tool, string input,AgentToolResult result)
+        {
+            return $"""
+                Tool: {tool.Name}
+                Request: {input}
+                Result:
+                {result.Content}
+                """;
         }
     }
 }

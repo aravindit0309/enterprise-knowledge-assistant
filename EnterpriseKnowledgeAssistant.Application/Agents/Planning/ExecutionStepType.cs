@@ -6,6 +6,7 @@
         StoreMemory,
         SearchMemory,
         ExecuteSql,
+        WebResearch,
         Respond
     }
 }

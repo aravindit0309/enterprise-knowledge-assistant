@@ -60,6 +60,7 @@ public static class PlannerMapper
             "storememory" => ExecutionStepType.StoreMemory,
             "searchmemory" => ExecutionStepType.SearchMemory,
             "executesql" => ExecutionStepType.ExecuteSql,
+            "webresearch" => ExecutionStepType.WebResearch,
             _ => throw new InvalidOperationException(
                 $"Unknown execution step type '{value}'.")
         };

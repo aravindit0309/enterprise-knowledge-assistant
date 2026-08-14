@@ -11,16 +11,17 @@ using EnterpriseKnowledgeAssistant.Domain.Documents;
 using EnterpriseKnowledgeAssistant.Infrastructure.Agents;
 using EnterpriseKnowledgeAssistant.Infrastructure.AI.Bedrock;
 using EnterpriseKnowledgeAssistant.Infrastructure.AI.Planner;
+using EnterpriseKnowledgeAssistant.Infrastructure.Options;
 using EnterpriseKnowledgeAssistant.Infrastructure.Persistence;
 using EnterpriseKnowledgeAssistant.Infrastructure.Persistence.Repositories;
 using EnterpriseKnowledgeAssistant.Infrastructure.Storage;
 using EnterpriseKnowledgeAssistant.Infrastructure.TextChunking;
 using EnterpriseKnowledgeAssistant.Infrastructure.TextExtraction;
+using EnterpriseKnowledgeAssistant.Infrastructure.WebResearch;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+using System.Net.Http;
 
 namespace EnterpriseKnowledgeAssistant.Infrastructure
 {
@@ -63,10 +64,13 @@ namespace EnterpriseKnowledgeAssistant.Infrastructure
 
             services.AddScoped<IMemoryRepository, MemoryRepository>();
             services.AddScoped<ISqlQueryExecutor, SqlQueryExecutor>();
-            services.AddScoped<ISqlValidator, SqlValidator>();
+            services.AddScoped<ISqlValidator, SqlValidator>();            
             services.AddScoped<ISqlGenerator, AmazonBedrockSqlGenerator>();
 
             services.Configure<StorageOptions>(configuration.GetSection(StorageOptions.SectionName));
+            services.Configure<TavilyOptions>(configuration.GetSection("Tavily"));
+
+            services.AddHttpClient<IWebResearchService, TavilyWebResearchService>();
 
             return services;
         }

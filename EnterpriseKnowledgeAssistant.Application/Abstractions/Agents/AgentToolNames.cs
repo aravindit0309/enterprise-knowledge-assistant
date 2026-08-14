@@ -6,5 +6,6 @@
         public const string StoreMemory = "StoreMemory";
         public const string SearchMemory = "SearchMemory";
         public const string ExecuteSql = "ExecuteSql";
+        public const string WebResearch = "WebResearch";
     }
 }
