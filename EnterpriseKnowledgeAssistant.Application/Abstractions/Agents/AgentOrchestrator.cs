@@ -31,15 +31,15 @@ namespace EnterpriseKnowledgeAssistant.Application.Abstractions.Agents
 
             foreach (var step in executionPlan.Steps.OrderBy(s => s.Order))
             {
+                if (string.IsNullOrWhiteSpace(step.ToolName))
+                {
+                    continue;
+                }
+
                 switch (step.Type)
                 {
                     case ExecutionStepType.Retrieve:
                         {
-                            if (string.IsNullOrWhiteSpace(step.ToolName))
-                            {
-                                continue;
-                            }
-
                             var tool = _tools.FirstOrDefault(t =>
                                 string.Equals(
                                     t.Name,
@@ -73,18 +73,12 @@ namespace EnterpriseKnowledgeAssistant.Application.Abstractions.Agents
 
                     case ExecutionStepType.StoreMemory:
                         {
-                            if (string.IsNullOrWhiteSpace(step.ToolName))
-                            {
-                                continue;
-                            }
-
-                            var tool = _tools.FirstOrDefault(t =>
+                           var tool = _tools.FirstOrDefault(t =>
                                 string.Equals(t.Name, step.ToolName, StringComparison.OrdinalIgnoreCase));
 
                             if (tool is null)
                             {
                                 _logger.LogWarning("Planner requested unknown tool '{ToolName}'.", step.ToolName);
-
                                 continue;
                             }
 
@@ -99,11 +93,6 @@ namespace EnterpriseKnowledgeAssistant.Application.Abstractions.Agents
 
                     case ExecutionStepType.SearchMemory:
                         {
-                            if (string.IsNullOrWhiteSpace(step.ToolName))
-                            {
-                                continue;
-                            }
-
                             var tool = _tools.FirstOrDefault(t =>
                                 string.Equals(
                                     t.Name,
@@ -127,17 +116,11 @@ namespace EnterpriseKnowledgeAssistant.Application.Abstractions.Agents
                         }
                     case ExecutionStepType.ExecuteSql:
                         {
-                            if (string.IsNullOrWhiteSpace(step.ToolName))
-                            {
-                                continue;
-                            }
-
                             var tool = _tools.FirstOrDefault(t =>string.Equals(t.Name, step.ToolName, StringComparison.OrdinalIgnoreCase));
 
                             if (tool is null)
                             {
                                 _logger.LogWarning( "Planner requested unknown tool '{ToolName}'.", step.ToolName);
-
                                 continue;
                             }
 
@@ -146,6 +129,29 @@ namespace EnterpriseKnowledgeAssistant.Application.Abstractions.Agents
                             var toolResult = await tool.ExecuteAsync(toolInput, cancellationToken);
 
                             knowledgeContexts.Add(BuildToolContext(tool, toolInput, toolResult));
+
+                            break;
+                        }
+                    case ExecutionStepType.WebResearch:
+                        {
+                            if (string.IsNullOrWhiteSpace(step.ToolName))
+                            {
+                                continue;
+                            }
+
+                            var tool = _tools.FirstOrDefault(t => string.Equals(t.Name, step.ToolName, StringComparison.OrdinalIgnoreCase));
+
+                            if (tool is null)
+                            {
+                                _logger.LogWarning("Planner requested unknown tool '{ToolName}'.", step.ToolName);
+                                continue;
+                            }
+
+                            var toolInput = string.IsNullOrWhiteSpace(step.Input) ? request.UserMessage : step.Input;
+
+                            var toolResult = await tool.ExecuteAsync(toolInput, cancellationToken);
+
+                            knowledgeContexts.Add( BuildToolContext(tool, toolInput, toolResult));
 
                             break;
                         }

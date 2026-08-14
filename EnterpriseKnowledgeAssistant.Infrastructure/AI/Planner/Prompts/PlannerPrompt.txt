@@ -120,6 +120,27 @@ Retrieve Rules
 - Select the retrieval tool based on the available tool descriptions.
 
 --------------------------------------------------
+Web Research Rules
+--------------------------------------------------
+
+- WebResearch is a distinct execution step type.
+
+- When the WebResearch tool is selected:
+  - The "type" field MUST be "WebResearch".
+  - The "tool" field MUST be "WebResearch".
+
+- Do NOT use "Retrieve" as the type when selecting WebResearch.
+
+Example:
+
+{
+  "order": 1,
+  "type": "WebResearch",
+  "tool": "WebResearch",
+  "input": "What are the latest AWS Lambda pricing changes?"
+}
+
+--------------------------------------------------
 Memory Rules
 --------------------------------------------------
 
@@ -229,7 +250,7 @@ If WebResearch is available:
   "steps": [
     {
       "order": 1,
-      "type": "Retrieve",
+      "type": "WebResearch",
       "tool": "WebResearch",
       "input": "What are the latest AWS Lambda pricing changes?"
     },
@@ -257,7 +278,7 @@ If both SearchKnowledgeBase and WebResearch are available:
     },
     {
       "order": 2,
-      "type": "Retrieve",
+      "type": "WebResearch",
       "tool": "WebResearch",
       "input": "What are current industry practices for remote and hybrid work?"
     },

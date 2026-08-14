@@ -23,6 +23,7 @@ namespace EnterpriseKnowledgeAssistant.Application
             services.AddScoped<IAgentTool, StoreMemoryTool>();
             services.AddScoped<IAgentTool, SearchMemoryTool>();
             services.AddScoped<IAgentTool, ExecuteSqlTool>();
+            services.AddScoped<IAgentTool, WebResearchTool>();
 
             return services;
         }
