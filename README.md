@@ -1,3 +1,10 @@
+# Project Status: Sprint #9 - Active Development
+
+This project is actively being developed as a hands-on exploration of production-oriented Generative AI and Agentic AI architecture.
+New capabilities are being introduced incrementally through development sprints, with the current focus on advanced agent orchestration, tool integration, research workflows and grounded AI responses.
+The architecture and implementation may continue to evolve as new AI patterns and engineering considerations are explored.
+
+
 # Enterprise Knowledge Assistant
 
 A production-style AI-powered Enterprise Knowledge Assistant built with **.NET 10**, **AWS Bedrock**, **PostgreSQL**, and **pgvector**.
@@ -22,6 +29,7 @@ The focus is on:
 - Large Language Model (LLM) integration
 - Retrieval-Augmented Generation (RAG)
 - Semantic Search
+- Multi Agent Orchestration
 - Agentic AI
 - AWS Cloud Integration
 - Production-oriented application design
@@ -72,6 +80,7 @@ The focus is on:
 | Sprint 5 | ✅ | Agentic AI, Tool Routing, Enterprise Query Router |
 | Sprint 6 | ✅ | AI Planning Agent, Execution Plans, Supervisor Agent, Multi-step Agent Execution |
 | Sprint 7 | ✅ | Memory Agent, SQL Agent, Tool-based Agent Execution |
+| Sprint 8 | ✅ | WebResearch Agent, Tool-based Agent Execution with orchestration between internal RAG, Memory, SQL and external web search |
 
 
 # Cost Optimizations
@@ -114,9 +123,7 @@ docs/
 
 └── FutureRoadmap.md
 
-```
-
----
+-------------
 
 # Learning Outcomes
 
