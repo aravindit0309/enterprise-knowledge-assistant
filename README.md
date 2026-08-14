@@ -1,38 +1,50 @@
-# Project Status: Sprint #9 - Active Development
-
-This project is actively being developed as a hands-on exploration of production-oriented Generative AI and Agentic AI architecture.
-New capabilities are being introduced incrementally through development sprints, with the current focus on advanced agent orchestration, tool integration, research workflows and grounded AI responses.
-The architecture and implementation may continue to evolve as new AI patterns and engineering considerations are explored.
-
-
 # Enterprise Knowledge Assistant
+
+> **Project Status: Sprint #9 — Active Development 🚧**
 
 A production-style AI-powered Enterprise Knowledge Assistant built with **.NET 10**, **AWS Bedrock**, **PostgreSQL**, and **pgvector**.
 
-The project demonstrates enterprise application architecture, Retrieval-Augmented Generation (RAG), semantic search, and Agentic AI using Clean Architecture principles.
+This project is actively being developed as a hands-on implementation of **production-oriented Generative AI and Agentic AI architecture**. Capabilities are introduced incrementally through development sprints, with the architecture evolving as new AI patterns and engineering considerations are explored.
+
+The current focus is on **advanced agent orchestration, tool integration, research workflows, and grounded AI responses**.
 
 ---
 
-# Project Objectives
+## Why This Project?
 
-The goal of this project is to build a portfolio-quality AI application that demonstrates skills expected from a:
+The goal is to build a AI application that demonstrates the architectural and engineering skills expected from a:
 
 - Software Architect
 - Solution Architect
 - Principal Engineer
 - Staff Engineer
 
-The focus is on:
+Rather than implementing a simple LLM chatbot, the project explores how multiple AI capabilities can be combined into an extensible application architecture.
 
-- Clean Architecture
-- Enterprise design patterns
-- Large Language Model (LLM) integration
+The implementation progressively evolves from direct LLM integration to **RAG, Agentic AI, planning, tool orchestration, multi-step execution, memory, SQL interaction, external web research, and grounded synthesis**.
+
+---
+
+## Key Capabilities
+
+- Large Language Model (LLM) integration using Amazon Bedrock
 - Retrieval-Augmented Generation (RAG)
-- Semantic Search
-- Multi Agent Orchestration
+- Embeddings and semantic search
+- PostgreSQL vector search using pgvector
+- Multi-turn conversation persistence
 - Agentic AI
-- AWS Cloud Integration
-- Production-oriented application design
+- Tool routing and dynamic tool selection
+- AI planning and execution plans
+- Supervisor-based agent orchestration
+- Multi-step agent execution
+- Memory agent
+- SQL agent
+- External web research
+- Orchestration across internal RAG, memory, SQL, and external web search
+- Grounded AI responses and research workflows
+- Clean Architecture and CQRS
+
+> **Note:** The project is still under active development. Some capabilities and architectural components may continue to evolve as new sprints are completed.
 
 ---
 
@@ -69,10 +81,51 @@ The focus is on:
 - Docker
 - AWS SDK for .NET
 
+---
+
+# Architecture
+
+The application follows **Clean Architecture**, separating the API, application/business logic, domain model, and infrastructure integrations.
+
+At a high level:
+
+```text
+Client
+   |
+   v
+API
+   |
+   v
+Application / Orchestration
+   |
+   +---- Agent Planning & Routing
+   |
+   +---- Tool Execution
+   |       |
+   |       +---- RAG / Semantic Search
+   |       +---- Memory
+   |       +---- SQL
+   |       +---- External Web Research
+   |
+   v
+Domain
+   |
+   v
+Infrastructure
+   |
+   +---- PostgreSQL / pgvector
+   +---- AWS Bedrock
+   +---- Document Processing
+```
+
+Detailed architecture and execution flows are available under the `docs/` directory.
+
+---
+
 # Sprint Progress
 
-| Sprint   | Status | Features |
-| -------- | ------ | -------- |
+| Sprint | Status | Features |
+| --- | --- | --- |
 | Sprint 1 | ✅ | Clean Architecture, CQRS, Dependency Injection |
 | Sprint 2 | ✅ | Amazon Bedrock Chat Integration |
 | Sprint 3 | ✅ | Conversation Persistence |
@@ -80,17 +133,49 @@ The focus is on:
 | Sprint 5 | ✅ | Agentic AI, Tool Routing, Enterprise Query Router |
 | Sprint 6 | ✅ | AI Planning Agent, Execution Plans, Supervisor Agent, Multi-step Agent Execution |
 | Sprint 7 | ✅ | Memory Agent, SQL Agent, Tool-based Agent Execution |
-| Sprint 8 | ✅ | WebResearch Agent, Tool-based Agent Execution with orchestration between internal RAG, Memory, SQL and external web search |
+| Sprint 8 | ✅ | WebResearch Agent and orchestration across internal RAG, Memory, SQL, and external web search |
+| Sprint 9 | 🚧 | Active development — advanced agent orchestration, tool integration, research workflows, and grounded AI responses |
 
+---
 
-# Cost Optimizations
+# Evolution of the AI Architecture
 
-This project was intentionally designed to minimize AWS costs.
+The project is intentionally being developed in stages to demonstrate how an AI application can evolve beyond a basic chatbot.
+
+```text
+LLM Integration
+      ↓
+Conversation Memory
+      ↓
+RAG + Embeddings + Semantic Search
+      ↓
+Agentic AI + Tool Routing
+      ↓
+Planning + Multi-step Execution
+      ↓
+Memory + SQL Agents
+      ↓
+External Web Research
+      ↓
+Multi-source Orchestration
+      ↓
+Grounded AI Responses
+      ↓
+Advanced Agent Architecture
+```
+
+This progression is intended to demonstrate not only the use of AI services, but also the **architectural decisions required to orchestrate multiple AI capabilities within a maintainable application**.
+
+---
+
+# Cost Optimization
+
+The project is intentionally designed to minimize AWS costs during development without compromising the architectural goals of the solution.
 
 Approach:
 
 - Amazon Nova Lite for chat
-- Titan Text Embeddings V2
+- Amazon Titan Text Embeddings V2
 - Local PostgreSQL
 - Local pgvector
 - Local document storage
@@ -98,47 +183,66 @@ Approach:
 
 No dedicated AI infrastructure runs continuously during development.
 
+---
 
 # Repository Structure
 
-```
-
+```text
 src/
-
 ├── EnterpriseKnowledgeAssistant.Api
-
 ├── EnterpriseKnowledgeAssistant.Application
-
 ├── EnterpriseKnowledgeAssistant.Domain
-
 └── EnterpriseKnowledgeAssistant.Infrastructure
 
 docs/
-
 ├── Architecture.md
-
 ├── AgentFlow.md
-
 ├── SequenceDiagram.md
-
 └── FutureRoadmap.md
+```
 
--------------
+---
+
+# Documentation
+
+The repository contains additional technical documentation covering:
+
+- Architecture
+- Agent execution flow
+- Sequence diagrams
+- Future roadmap
+
+See the `docs/` directory for details.
+
+---
 
 # Learning Outcomes
 
-This project demonstrates practical experience with:
+This project provides hands-on experience with:
 
 - Enterprise Architecture
+- Generative AI
 - Large Language Models (LLMs)
 - Amazon Bedrock
 - Retrieval-Augmented Generation (RAG)
+- Embeddings
 - Semantic Search
 - Agentic AI
+- Agent orchestration
+- Tool-based AI execution
 - PostgreSQL Vector Search
 - Clean Architecture
 - CQRS
 - AWS Integration
+- AI application design
+
+---
+
+# Project Status
+
+**Sprint 9 — Active Development 🚧**
+
+This repository represents an evolving AI architecture project rather than a completed product. New capabilities are being implemented incrementally, with an emphasis on understanding and demonstrating production-oriented patterns for **Generative AI, RAG, Agentic AI, orchestration, and grounded AI systems**.
 
 ---
 
